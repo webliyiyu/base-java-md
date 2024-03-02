@@ -4569,6 +4569,94 @@ TCP通信协议是一种可靠的网络协议，它在通信的两端各建立�
 
 
 
+**发送数据：**
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo01;
+
+import com.buercorp.wangyu.oop.Demo08.Outer;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+
+/**
+ * TCP 发送数据
+ * @author liyiyu
+ */
+public class Client {
+    public static void main(String[] args) throws IOException {
+        // 1.创建Socket对象
+        //  没有链接上之直接报错
+        Socket socket = new Socket("127.0.0.1",13333);
+
+        // 2.可以从链接通道获取输出流
+        OutputStream os = socket.getOutputStream();
+        // 写出数据
+        os.write("Hello 你好".getBytes());
+
+        // 3.释放资源
+        os.close();
+        socket.close();
+    }
+}
+
+```
+
+**读取数据：**
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo01;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * TCP 接受数据
+ * @author liyiyu
+ */
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 1.创建对象ServerSocker
+        ServerSocket ss = new ServerSocket(13333);
+        // 2.监听客户端的链接
+        Socket socket = ss.accept();
+        // 3.从链接通道中获取输入流读取数据
+        InputStream is = socket.getInputStream();
+        // 把字节流转换为字符流
+        InputStreamReader isr = new InputStreamReader(is);
+        // 缓冲流提高效率
+        BufferedReader br = new BufferedReader(isr);
+        // 最终
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        // 提高效率 br2
+        int b2;
+        while ((b2 = br2.read()) != -1) {
+            System.out.print((char) b2); // Hello 你好
+        }
+
+        int len;
+        byte[] bytes = new byte[1024];
+        while ((len = is.read(bytes)) != -1) {
+            System.out.println(new String(bytes,0,len));
+        } // Hello 你好
+
+        int b;
+        while ((b = isr.read()) != -1) {
+            System.out.print((char) b); // Hello 你好
+        }
+
+        socket.close();
+        ss.close();
+    }
+}
+
+```
+
 
 
 
