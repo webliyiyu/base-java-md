@@ -76,3 +76,15 @@ git remote -v
 git remote set-url origin https://gitee.com/the-yibai-daywind/hashmap.git
 ```
 
+### 将master分支推送到远程仓库，并于远程仓库的master分支绑定关联关系
+
+```xml
+git push --set-uptream origin master
+```
+
+#### 查看当前工作树中未合并的文件列表
+
+```xml	
+git status
+```
+
