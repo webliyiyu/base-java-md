@@ -4657,6 +4657,306 @@ public class Server {
 
 ```
 
+#### 接收并反馈
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo02;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+
+/**
+ * 客户端发送数据并接收服务器返回的数据
+ * @author liyiyu
+ */
+public class Client {
+    public static void main(String[] args) throws IOException {
+        // 创建socket对象，连接服务器
+        Socket socket = new Socket("127.0.0.1", 13333);
+        // 写出数据
+        OutputStream os = socket.getOutputStream();
+        String str = "客户端发送的数据";
+        os.write(str.getBytes());
+
+        // 写出结束标记
+        socket.shutdownOutput();
+
+        // 接收服务器回写的数据
+        InputStream is = socket.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is);
+        int b;
+        while ((b = isr.read()) != -1){
+            System.out.println((char) b);
+        }
+
+        // 释放资源
+        socket.close();
+    }
+}
+```
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo02;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * 服务器接收返回的数据
+ * @author liyiyu
+ */
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 绑定端口
+        ServerSocket ss = new ServerSocket(13333);
+        // 等待客户端连接
+        Socket socket = ss.accept();
+        // 获取输入流信息
+        InputStream is = socket.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is);
+        int b;
+        /**
+         * 细节：
+         * read方法会从连接通道中读取数据
+         * 但是 需要有结束标记 此处循环才会停止
+         * 否则 程序会一直停在read这
+         */
+        while ((b = isr.read()) != -1){
+            System.out.println((char) b);
+        }
+
+        // 回写数据
+        String str = "服务器回写数据";
+        OutputStream os = socket.getOutputStream();
+        os.write(str.getBytes());
+
+        socket.close();
+        ss.close();
+    }
+}
+```
+
+#### 上传文件
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo03;
+
+import java.io.*;
+import java.net.Socket;
+
+/**
+ * 本地文件上传
+ * 客户端：将本地文件上传到服务器 接收服务器的反馈
+ * 服务器：接收客户端上传的文件 上传完毕之后给出反馈
+ *
+ * @author liyiyu
+ */
+public class Client {
+    public static void main(String[] args) throws IOException {
+        // 连接服务器
+        Socket socket = new Socket("127.0.0.1", 13333);
+        // 读取本地文件数据 并写到服务器
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream("src\\main\\resources\\clientdir\\lan.jpg"));
+        BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
+        int len;
+        byte[] bytes = new byte[1024];
+        while ((len = bis.read(bytes)) != -1) {
+            bos.write(bytes, 0, len);
+        }
+        // 往服务器写出结束标记
+        socket.shutdownOutput();
+        // 接收服务器的回写数据
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line = br.readLine();
+        System.out.println(line);
+
+        socket.close();
+    }
+}
+```
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo03;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.UUID;
+
+/**
+ * 本地文件上传
+ * 客户端：将本地文件上传到服务器 接收服务器的反馈
+ * 服务器：接收客户端上传的文件 上传完毕之后给出反馈
+ *
+ * @author liyiyu
+ */
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 绑定端口
+        ServerSocket ss = new ServerSocket(13333);
+        // 等待客户端来连接
+        Socket socket = ss.accept();
+        // 读取数据并保存在本地文件中
+        BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+        // UUID 生成 随机的 文件名
+        String name = UUID.randomUUID().toString().replace("-", "");
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("src\\main\\resources\\serverdir\\" + name + ".jpg"));
+        int len;
+        byte[] bytes = new byte[1024];
+        while ((len = bis.read(bytes)) != -1) {
+            bos.write(bytes, 0, len);
+        }
+        // 回写数据
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        bw.write("上传成功");
+        bw.newLine();
+        // 用于清空BufferedWriter的缓冲区并强制写入所有剩余字符
+        bw.flush();
+        // 释放资源
+        socket.close();
+        ss.close();
+    }
+}
+```
+
+#### 上传文件（多线程）
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo04;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.UUID;
+
+/**
+ * 本地文件上传
+ * 客户端：将本地文件上传到服务器 接收服务器的反馈
+ * 服务器：接收客户端上传的文件 上传完毕之后给出反馈
+ *
+ * @author liyiyu
+ */
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 绑定端口
+        ServerSocket ss = new ServerSocket(13333);
+        while (true) {
+            // 等待客户端来连接
+            Socket socket = ss.accept();
+            // 开启一条线程
+            new Thread(new Myrunnable(socket)).start();
+        }
+    }
+}
+```
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo04;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.UUID;
+
+public class Myrunnable implements Runnable{
+    Socket socket;
+    public Myrunnable(Socket socket){
+        this.socket = socket;
+    }
+    @Override
+    public void run() {
+        try {
+            // 读取数据并保存在本地文件中
+            BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+            // UUID 生成 随机的 文件名
+            String name = UUID.randomUUID().toString().replace("-", "");
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("src\\main\\resources\\serverdir\\" + name + ".jpg"));
+            int len;
+            byte[] bytes = new byte[1024];
+            while ((len = bis.read(bytes)) != -1) {
+                bos.write(bytes, 0, len);
+            }
+            // 回写数据
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            bw.write("上传成功");
+            bw.newLine();
+            // 用于清空BufferedWriter的缓冲区并强制写入所有剩余字符
+            bw.flush();
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }finally {
+            // 释放资源
+            if (socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        }
+    }
+}
+```
+
+#### 上传文件（线程池）
+
+```java
+package com.buercorp.wangyu.socket.tcpdemo04;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 本地文件上传 线程
+ * 客户端：将本地文件上传到服务器 接收服务器的反馈
+ * 服务器：接收客户端上传的文件 上传完毕之后给出反馈
+ *
+ * @author liyiyu
+ */
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 绑定端口
+        ServerSocket ss = new ServerSocket(13333);
+        // 创建线程池对象
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(
+                3,
+                10,
+                60,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(2),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy()
+        );
+        while (true) {
+            // 等待客户端来连接
+            Socket socket = ss.accept();
+            // 开启一条线程
+//            new Thread(new Myrunnable(socket)).start();
+            // 线程池创建对象
+            pool.submit(new Myrunnable(socket));
+        }
+    }
+}
+```
+
+
+
 
 
 
