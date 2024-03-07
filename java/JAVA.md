@@ -5003,6 +5003,91 @@ public class Server {
 
 ![image-20240305224153850](image-20240305224153850.png)
 
+```java
+package com.buercorp.wangyu.jdbcdemo;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+public class JdbcDemo01 {
+    /**
+     * 快速入门
+     * 1. 导入mysql驱动包
+     * 2. 注册驱动
+     * 3. 获取连接
+     * 4. 定义sql
+     * 5. 获取执行sql的对象
+     * 6. 执行sql
+     * 7. 处理结果
+     * 8. 关闭资源
+     * @author liyiyu
+     */
+
+    public static void main(String[] args) throws Exception {
+        // 导入jar包 mysql-connector-java-8.0.11.jar
+        // 注册驱动
+        Class.forName("com.mysql.jdbc.Driver");
+        System.out.println("驱动注册成功");
+
+        // 数据库连接
+        String url = "jdbc:mysql://127.0.0.1:3306/test02";
+        String username = "root";
+        String password = "123456";
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        // 定义sql 添加数据
+        String sql = "INSERT INTO `user` VALUES(4,'liyi4',22,'v')";
+
+        // 获取执行sql的对象
+        Statement stmt = conn.createStatement();
+
+        // 执行sql
+        int result = stmt.executeUpdate(sql);
+
+        // 处理结果
+        System.out.println("更新结果：" + result);
+
+        // 关闭资源
+        stmt.close();
+        conn.close();
+    }
+}
+
+```
+
+### AIP详解
+
+#### DriverManager
+
+
+
+
+
+#### Connection
+
+
+
+
+
+#### Statement
+
+
+
+
+
+#### ResultSet
+
+
+
+
+
+#### PreparedStatement
+
+
+
+
+
 
 
 
