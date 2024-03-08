@@ -5027,7 +5027,7 @@ public class JdbcDemo01 {
     public static void main(String[] args) throws Exception {
         // 导入jar包 mysql-connector-java-8.0.11.jar
         // 注册驱动
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         System.out.println("驱动注册成功");
 
         // 数据库连接
@@ -5060,35 +5060,128 @@ public class JdbcDemo01 {
 
 #### DriverManager
 
+* 注册驱动（可以省略）
 
+```java
+Class.forName("com.mysql.jdbc.Driver");
+```
+
+* 获取数据库连接
+
+```java
+String url = "jdbc:mysql://127.0.0.1:3306/test02";
+String username = "root";
+String password = "123456";
+Connection conn = DriverManager.getConnection(url, username, password);
+```
 
 
 
 #### Connection
 
+**获取执行SQL的对象**
 
+**管理事务**
+
+![image-20240308150639549](image-20240308150639549.png)
 
 
 
 #### Statement
 
+**执行SQL语句**
 
-
-
+![image-20240308150758850](image-20240308150758850.png)
 
 #### ResultSet
 
+**封装了DQL查询语句的结果**
 
+![image-20240308153048469](image-20240308153048469.png)
 
 
 
 #### PreparedStatement
 
+**预编译SQL语句并执行，预防SQL注入问题**
+
+**SQL注入：**
+
+* SQL注入是通过操作输入来修改事先定义好的SQL语句，用以达到执行代码对服务器进行**攻击**的方法
+
+![image-20240308170308575](image-20240308170308575.png)
 
 
 
+```java
+package com.buercorp.yiyu.jdbc;
+
+import java.sql.*;
+import java.util.stream.Stream;
+
+/**
+ * SQL注入
+ *
+ * @author liyiyu
+ */
+public class UserLogin {
+    public static void main(String[] args) throws Exception {
+        // 导入jar包 mysql-connector-java-8.0.11.jar
+        // 注册驱动
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        // 数据库连接
+        String url = "jdbc:mysql://127.0.0.1:3306/userpwdsql?useSSL=false&useServerPrepStmts=true";
+        String username = "root";
+        String password = "123456";
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        // 接受用户输入的账号 密码
+        String name = "xiaoli";
+        String pwd = "or 1 = 1";
+
+        /*// sql注入
+        String pwdsql = "'or '1' = '1";
+        // SELECT * FROM usepwd WHERE  PASSWORD='123456' AND Username='xiaoli'
+        String sql = "SELECT * FROM usepwd WHERE USERNAME='" + name + "' AND PASSWORD='" + pwdsql + "'";
+        // 登入成功
+        System.out.println("sql注入原因：" + sql); // SELECT * FROM usepwd WHERE USERNAME='xiaoli' AND PASSWORD=''or '1' = '1'
+        // 获取stmt对象
+        Statement stmt = conn.createStatement();
+
+        ResultSet resultSet = stmt.executeQuery(sql);*/
 
 
+        // 解决sql注入
+
+        // 定义sql
+        String sql = "SELECT * FROM usepwd WHERE USERNAME= ? AND PASSWORD= ?";
+
+        // 获取pstmt对象
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        // 设置 ？ 的值
+        pstmt.setString(1,name);
+        pstmt.setString(2,pwd);
+
+        // 执行sql
+        ResultSet resultSet = pstmt.executeQuery();
+        System.out.println("sql注入原因：" + sql);
+        if (resultSet.next()) {
+            System.out.println(name + "登入成功");
+        } else {
+            System.out.println("登入失败");
+        }
+
+        // 关闭资源
+        pstmt.close();
+        conn.close();
+    }
+}
+
+```
+
+![image-20240308181630746](image-20240308181630746.png)
 
 
 
