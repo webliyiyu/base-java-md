@@ -5205,9 +5205,92 @@ public class UserLogin {
 
 阿里巴巴数据库连接池
 
+**使用步骤：**
 
+* 导入jar包druid
+* 定义配置文件
+* 加载配置文件
+* 获取数据库连接池对象
+* 获取链接
 
+```properties
+# properties
+driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql:///test02?useSSL=false&useServerPrepStmts=true
+username=root
+password=123456
+# 初始化链接数量
+initialSize=5
+# 最大链接数
+maxActive=10
+# 最大等待时间
+maxWait=3000
+```
 
+```java
+package com.buercorp.yiyu.jdbc;
+
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+
+import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.sql.Connection;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * Driud数据库连接池基本使用
+ * @author liyiu
+ */
+public class Driud {
+    public static void main(String[] args) throws Exception {
+        // 1.导入jar包
+
+        // 2.定义配置文件.properties
+
+        // 3.加载配置文件
+        System.out.println("文件根位置是："+ System.getProperty("user.dir"));
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/main/resources/druid.properties"));
+
+        // 4.获取连接池对象
+        DataSource dataSource = DruidDataSourceFactory.createDataSource(prop);
+
+        // 5.获取数据库链接 Connection
+        Connection connection = dataSource.getConnection();
+        System.out.println(connection);
+    }
+}
+```
+
+#### 案列
+
+```xml
+-- 删除tb brand表
+drop table if exists tb_brand;
+-- 创建tb_brand表
+create table tb_brand
+(
+-- id 主键
+id	int primary key auto_increment,
+-- 品牌名称
+brand_name	varchar(20),
+-- 企业名称
+company_name varchar(20),
+-- 排序字段
+ordered	int,
+-- 描述信息
+description	varchar(100),
+-- 状态:0:禁用1:启用
+status	int
+);
+-- 添加数据
+insert into tb_brand (brand_name, company_name, ordered, description, status)
+values('三只松鼠','三只松鼠股份有限公司'，5，'好吃不上火'，0),
+('华为','华为技术有限公司'，188，'华为致力于把数字世界带入每个人、每个家庭、每个组织，构建万物互联的智能世界'，1)，
+('小米',小米科技有限公司'，50，'are you ok'，1);
+SELECT * FROM tb_brand;
+```
 
 
 
