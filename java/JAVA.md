@@ -3090,7 +3090,7 @@ public class FileTest2 {
 
 
 #### FileQutputStream字节流
->>>>>   origin/master
+origin/master
 
 操作本地文件的字节输出流，可以把程序中的数据写到本地文件中
 
