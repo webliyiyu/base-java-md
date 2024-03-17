@@ -110,7 +110,17 @@ public class SrevletDemo03 extends HttpServlet {
         // 控制台打印
         System.out.println("Hello Servlet");
         // 通过流输出数据到浏览器
+        
         resp.getWriter().write("Hello Servlet");
+        // 获取请求的方式
+        String method = req.getMethod();
+        System.out.println("请求的方法：" + method);
+        
+        // 获取ServletContext对象
+        ServletContext context = getServletContext();
+        //在 ContextServlet1 存储数据 以及 读取数据
+        context.setAttribute("key1", "value1"); // 存储数据
+        System.out.println("ContextServlet1 读取数据: " + context.getAttribute("key1")); // 读取数据
     }
 }
 ```
@@ -302,6 +312,25 @@ public class SrevletDemo02 extends HttpServlet {
 不共享数据
 
 ![image-20240313174311476](image-20240313174311476.png)
+
+
+
+#### 获得所有的请求参数 getParameterMap()。key为参数名,value为key对应的所有的值
+
+```java
+// 获得所有的请求参数 getParameterMap()
+System.out.println("获得所有的请求参数 getParameterMap()： ");
+Map<String, String[]> parameterMap = request.getParameterMap();
+// 遍历所有参数 map
+for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+    // 遍历参数的value
+    for (String value : entry.getValue()) {
+        System.out.println(entry.getKey() + ": " + value);
+    }
+}
+```
+
+
 
 ## Cookie
 
