@@ -85,6 +85,8 @@ Servlet运行在服务端的Java小程序，是sun公司提供—套规范(接�
 
 ### 快速启动：
 
+Tomcat版本9.0.86
+
 ```java
 package main.web.servlet;
 
@@ -113,6 +115,35 @@ public class SrevletDemo03 extends HttpServlet {
         resp.getWriter().write("Hello Servlet");
     }
 }
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+<!--  <servlet>-->
+<!--    <servlet-name>demo3</servlet-name>-->
+<!--    <servlet-class>com.buercorp.wangyu.SrevletDemo03</servlet-class>-->
+<!--  </servlet>-->
+
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>demo3</servlet-name>-->
+<!--    <url-pattern>/demo</url-pattern>-->
+<!--  </servlet-mapping>-->
+
+  <servlet>
+    <servlet-name>demo1</servlet-name>
+    <servlet-class>com.buercorp.wangyu.ServletDemo1</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>demo1</servlet-name>
+    <url-pattern>/demo1</url-pattern>
+  </servlet-mapping>
+</web-app>
 ```
 
 ### 生命周期：
