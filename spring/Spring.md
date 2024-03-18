@@ -5,7 +5,13 @@
 - `Spring Framework`，即`Spring`框架本身，包含`IoC`，`MVC`以及`AOP`等核心功能，`Spring Framework`是`Spring`其他模块的基础。
 - `Spring`全家桶，如`Spring Data`，`Spring Cloud`，`Spring Boot`，`Spring Security`等模块。
 
+### 三层架构
 
+![image-20240319000107884](image-20240319000107884.png)
+
+![image-20240319000232085](image-20240319000232085.png)
+
+![image-20240319001507691](image-20240319001507691.png)
 
 ### 分层解耦
 
