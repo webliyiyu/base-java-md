@@ -112,7 +112,17 @@ public class SrevletDemo03 extends HttpServlet {
         // 控制台打印
         System.out.println("Hello Servlet");
         // 通过流输出数据到浏览器
+        
         resp.getWriter().write("Hello Servlet");
+        // 获取请求的方式
+        String method = req.getMethod();
+        System.out.println("请求的方法：" + method);
+        
+        // 获取ServletContext对象
+        ServletContext context = getServletContext();
+        //在 ContextServlet1 存储数据 以及 读取数据
+        context.setAttribute("key1", "value1"); // 存储数据
+        System.out.println("ContextServlet1 读取数据: " + context.getAttribute("key1")); // 读取数据
     }
 }
 ```
@@ -334,12 +344,60 @@ public class SrevletDemo02 extends HttpServlet {
 
 ![image-20240313174311476](image-20240313174311476.png)
 
+
+
+#### 获得所有的请求参数 getParameterMap()。key为参数名,value为key对应的所有的值
+
+```java
+// 获得所有的请求参数 getParameterMap()
+System.out.println("获得所有的请求参数 getParameterMap()： ");
+Map<String, String[]> parameterMap = request.getParameterMap();
+// 遍历所有参数 map
+for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+    // 遍历参数的value
+    for (String value : entry.getValue()) {
+        System.out.println(entry.getKey() + ": " + value);
+    }
+}
+```
+
+
+
 ## Cookie
 
 Cookie是浏览器提供的一种技术，通过服务器的程序能将一些只保存在客户端，或者在客户端进行处理的数据，放在本地的计算机上，不需要通过网络传输，因而提高网页处理的效率，并且能够减少服务器的负载，但是由于Coolie是服务器端保存在客户端的信息，所以其安全性是很差的，列如常见的记住密码则可以通过Coolie来实现的
 
 有一个专门操作Coolie的类javax.servlet.http.Cookit 随着服务器端的响应发送给客户端，保存在浏览器。当下次再访问服务器是把Coolie再带回服务器
 
+**Cookie的特点**
+\1. cookie保存在客户端(浏览器), 往往是由服务器产生发送给浏览器
+\2. cookie只能保存字符串, 格式是 entry(name : value)
+\3. cookie的大小有限制: 4k
+\4. 一般, 同一域名下的cookie限制数量50个
+
 **Coolie的格式：**键值对用"="等号链接，多个键值对间通过";"分号隔开
 
 ![image-20240313174421581](image-20240313174421581.png)
+
+## 三层架构
+
+- 软件中分层：按照不同功能分为不同层，通常分为三层：表现层(web层)，业务层，持久(数据库)层。
+
+![image-20240317150523752](image-20240317150523752.png)
+
+### 分层的意义:
+
+- 1. 解耦：降低层与层之间的耦合性。
+  2. 可维护性：提高软件的可维护性，对现有的功能进行修改和更新时不会影响原有的功能。
+  3. 可扩展性：提升软件的可扩展性，添加新的功能的时候不会影响到现有的功能。
+  4. 可重用性：不同层之间进行功能调用时，相同的功能可以重复使用。
+  5. 
+. 
+### 程序设计的宗旨:
+
+* 高内聚低耦合
+
+* 可扩展性强
+
+  - 可维护性强
+  - 可重用性强
