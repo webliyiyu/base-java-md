@@ -2749,6 +2749,30 @@ public class MyCallable implements Callable {
 
 ![image-20240220143501537](img/image-20240220143501537.png)
 
+#### execute&submit
+
+`execute` 和 `submit` 方法都是用来向线程池提交任务的，但它们之间存在一些关键的区别：
+
+1. **返回值**：
+   - `execute`：没有返回值，它执行的任务是 `Runnable` 类型的。如果任务提交成功，那么此方法会立即返回 null；如果线程池已满，无法接受新任务，那么会抛出一个 `RejectedExecutionException` 异常。
+   - `submit`：有返回值，它执行的任务可以是 `Runnable` 或 `Callable` 类型。当任务被成功提交后，`submit` 方法会返回一个 `Future` 对象，通过这个 `Future` 对象可以获取异步执行任务的结果或取消任务。
+2. **任务类型**：
+   - `execute`：只能接收 `Runnable` 类型的任务。
+   - `submit`：可以接收 `Runnable` 和 `Callable` 类型的任务。如果任务是 `Callable` 类型，则 `submit` 方法可以返回任务执行的结果。
+3. **异常处理**：
+   - `execute`：无法直接处理任务执行过程中的异常，如果任务执行过程中抛出异常，则会由工作线程捕获并丢弃，或者在线程池关闭时由 `ThreadPoolExecutor` 的拒绝策略来处理。
+   - `submit`：可以通过 `Future.get()` 方法来捕获任务执行过程中的异常。如果任务执行过程中出现异常，那么在调用 `Future.get()` 时会将该异常重新抛出。
+4. **任务取消**：
+   - `execute`：无法取消任务，因为不提供返回的 `Future` 对象。
+   - `submit`：可以通过返回的 `Future` 对象来取消任务。
+5. **功能范围**：
+   - `execute`：功能相对简单，只负责执行任务，不关心任务的返回结果和异常情况。
+   - `submit`：功能更丰富，除了提交任务执行外，还可以处理任务的返回结果和异常。
+
+总结来说，如果你不需要关心任务的执行结果和异常，并且任务没有返回值，那么可以使用 `execute` 方法。如果你需要获取任务的执行结果，或者需要对任务执行中的异常进行处理，那么应该使用 `submit` 方法。
+
+
+
 #### 线程池处理Callable任务
 
 ```java
@@ -5199,7 +5223,7 @@ public class UserLogin {
 * 提升系统相应速度
 * 避免数据库链接遗漏
 
-标准接口：Data
+标准接口：DataSource
 
 #### Druid
 
@@ -5262,6 +5286,8 @@ public class Driud {
     }
 }
 ```
+
+![image-20240320182035599](image-20240320182035599.png)
 
 #### 案列
 
