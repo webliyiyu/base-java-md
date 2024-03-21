@@ -121,7 +121,9 @@ spring是一个开源的轻量级java开发应用框架，可以简化企业级�
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-<!--  配置UserServiceImlp  -->
+<!--  配置UserServiceImlp  bean-->
+    <!--  id属性表示给bean起名字  -->
+    <!--  class表示给bean定义类型  -->
     <bean id="userService" class="com.buercorp.wangyu.spring.demo.service.impl.UserServiceImpl">
         <!--name="xxx"-->
         <property name="userdao" ref="userDao"></property>
@@ -212,7 +214,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MyServiceImpITest {
     public static void main(String[] args) {
-        // 加载Spring配置文件
+        // 加载Spring配置文件 获取IOC容器
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml"); // applicationContext.xml
 
         // 从ApplicationContext中获取bean实例
@@ -236,11 +238,14 @@ class MyServiceImpITest {
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 <!--  配置UserServiceImlp  -->
     <bean id="userService" class="com.buercorp.wangyu.spring.demo.service.impl.UserServiceImpl">
+        <!--  name属性表示配置哪一个具体的属性  -->
+        <!--  ref属性表示参照哪一个bean  -->
         <!--name="xxx"-->
         <property name="userdao" ref="userDao"></property>
 
     </bean>
 <!--配置userDao-->
+    <!--  xxx  -->
     <bean id="userDao" class="com.buercorp.wangyu.spring.demo.dao.impl.UserDaoImpl">
 </bean>
 <!--  ApplicationContext  -->
@@ -268,9 +273,23 @@ class MyServiceImpITest {
 
 ![image-20240318164814895](image-20240318164814895.png)
 
+#### 实例化bean
+
+![image-20240321214030571](image-20240321214030571.png)
+
+![image-20240321214355720](image-20240321214355720.png)
+
+#### bean生命周期
+
+![image-20240321214653646](image-20240321214653646.png)
 
 
 
+#### DI依赖注入
+
+![image-20240321214913078](image-20240321214913078.png)
+
+![image-20240321214951753](image-20240321214951753.png)
 
 
 
