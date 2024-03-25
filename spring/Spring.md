@@ -364,6 +364,14 @@ class MyServiceImpITest {
 
 
 
+- **@RestController**：这个注解是`@Controller`和`@ResponseBody`的组合。它表示该类中的方法默认返回数据而不是视图，通常用于构建RESTful风格的Web服务。使用`@RestController`注解的类中的所有方法都会自动将返回值作为HTTP响应的主体内容，通常是JSON或XML格式的数据。这意味着，你不需要在每个方法上添加`@ResponseBody`注解来指定返回数据而不是视图
+
+
+
+- **@Controller**：这个注解用于定义一个Spring MVC控制器，其方法默认处理HTTP请求并返回视图的逻辑名称，然后由视图解析器解析为具体的视图页面。如果你想要让某个方法返回数据而不是视图，你需要在该具体方法上添加`@ResponseBody`注解
+
+
+
 ![image-20240323140545514](image-20240323140545514.png)
 
 
@@ -397,3 +405,28 @@ class MyServiceImpITest {
 ![image-20240324140025553](image-20240324140025553.png)
 
 ![image-20240324140033185](image-20240324140033185.png)
+
+## 拦截器
+
+### 概念：
+
+拦截器（Interceptor）是一种动态拦截方法调用的机制
+
+### 作用：
+
+* 在指定的方法调用前后执行预先设定后的代码
+* 阻止原始方法的执行
+
+### 过滤器与拦截器区别
+
+* **归属不同：**Filter属于Servlet技术	Interceptor属于SpringMVC技术
+* **拦截内容不同：**Filter对所有访问进行增强，Interceptor仅针对SpringMVC的访问进行增强
+
+
+
+
+
+
+
+
+
