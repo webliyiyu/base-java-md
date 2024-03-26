@@ -5109,6 +5109,56 @@ Connection conn = DriverManager.getConnection(url, username, password);
 
 ![image-20240308150639549](image-20240308150639549.png)
 
+```java
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Savepoint;
+
+public class JdbcTransactionExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/test";
+        String user = "root";
+        String password = "password";
+
+        try {
+            // 加载驱动并建立连接
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection(url, user, password);
+
+            // 关闭自动提交
+            connection.setAutoCommit(false);
+
+            // 执行SQL语句
+            String sql1 = "UPDATE account SET balance = balance - 100 WHERE id = 1";
+            PreparedStatement pstmt1 = connection.prepareStatement(sql1);
+            pstmt1.executeUpdate();
+
+            // 设置保存点
+            Savepoint savepoint = connection.setSavepoint();
+
+            // 执行第二条SQL语句
+            String sql2 = "UPDATE account SET balance = balance + 100 WHERE id = 2";
+            PreparedStatement pstmt2 = connection.prepareStatement(sql2);
+            pstmt2.executeUpdate();
+
+            // 提交事务
+            connection.commit();
+
+            // 如果需要回滚到保存点，可以调用以下方法：
+            // connection.rollback(savepoint);
+
+            // 关闭资源
+            pstmt1.close();
+            pstmt2.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
 
 
 #### Statement
