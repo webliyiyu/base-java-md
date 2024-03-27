@@ -496,6 +496,10 @@ public class SpringBootDemoApplication {
 
 ![image-20240326154122124](image-20240326154122124.png)
 
+### 快速入门
+
+![image-20240326232253519](image-20240326232253519.png)
+
 ```java
 package com.buercorp.wangyu.controller;
 
