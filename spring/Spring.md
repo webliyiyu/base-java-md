@@ -481,7 +481,11 @@ package com.buercorp.wangyu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+/**
+* 启动类
+* 默认扫描启动类所在的包及其子包
+*也可以指定扫面的包 @ComponentScan(basePackages="")
+*/
 @SpringBootApplication
 public class SpringBootDemoApplication {
 
@@ -493,8 +497,20 @@ public class SpringBootDemoApplication {
 
 * SpringBoot在创建项目时，采用jar的打包方式
 * SpringBoot的引导类是项目的入口，运行main方法就可以启动项目
+* 
+* 使用yml**层次清晰，关注数据**
+
+### 获取yml的数据
+
+**@ConfigurationPropperties**
 
 ![image-20240326154122124](image-20240326154122124.png)
+
+**@Value**
+
+![image-20240327095840057](image-20240327095840057.png)
+
+![image-20240327095218708](image-20240327095218708.png)
 
 ### 快速入门
 
@@ -627,6 +643,83 @@ server:
 
 ![image-20240326164743322](image-20240326164743322.png)
 
+### Bean注册
+
+**如果要注册的bean对象来自于第三方（不是自定义的），是无法使用@Component及衍生注解声明bean的**
+
+![image-20240327104252937](image-20240327104252937.png)
+
+* **@Bean**
+
+  ![image-20240327110718614](image-20240327110718614.png)
+
+* **@Import**
+
+![image-20240327113019925](image-20240327113019925.png)
+
+```java
+package com.github.greatwqs.app.common.config;
+
+import org.graalvm.polyglot.HostAccess;
+import org.springframework.context.annotation.ImportSelector;
+import org.springframework.core.type.AnnotationMetadata;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * CommonsConfig
+ *
+ * @author greatwqs
+ * Create on 2020/6/25
+ */
+public class CommonsConfig implements ImportSelector {
+
+    @Override
+    public String[] selectImports(AnnotationMetadata annotationMetadata) {
+        // 读取配置文件(common.imports)里面的配置
+        List<String> imports = new ArrayList<>();
+        InputStream is = CommonsConfig.class.getClassLoader().getResourceAsStream("common.imports");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line = null;
+        try {
+            while ((line = br.readLine()) != null) {
+                imports.add(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return imports.toArray(new String[0]);
+    }
+}
+```
+
+****
+
+### 注册条件
+
+![image-20240327114907630](image-20240327114907630.png)
+
+### 自动配置
+
+![image-20240327143740934](image-20240327143740934.png)
+
+![image-20240327144503399](image-20240327144503399.png)
+
 
 
 ### 整合JUnit
@@ -682,6 +775,25 @@ class SpringBootDemoApplicationTests {
 
 #### 整合Mybits
 
+* 导入依赖Mybits
+* 配置
+
+```xml
+		<!--mybatis启动依赖-->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+
+		<!--mysql连接依赖-->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+```
+
 ```java
 package com.buercorp.wangyu;
 
@@ -703,10 +815,21 @@ class BootMybitsApplicationTests {
 ```
 
 ```properties
+# properties配置
 spring.application.name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/userdemo?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&verifyServerCertificate=false&autoReconnct=true&autoReconnectForPools=true&allowMultiQueries=true
 spring.datasource.username=root
 spring.datasource.password=123456
+```
+
+```yml
+# yml配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/userdemo?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
 ```
 
 ```java
