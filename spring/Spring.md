@@ -451,11 +451,25 @@ public class BookController {
 * **归属不同：**Filter属于Servlet技术	Interceptor属于SpringMVC技术
 * **拦截内容不同：**Filter对所有访问进行增强，Interceptor仅针对SpringMVC的访问进行增强
 
-
+* Filter依赖于Servlet容器，属于Servlet规范的一部分，而Interceptor依赖于SpringMVC框架
+* Filter的生命周期由Servlet容器管理，而Interceptor通过IOC容器来管理，可通过注入等方式来获取Bean的实例
+* Filter可拦截所有web资源（包括Jsp、Servlet、静态资源），而Interceptor则只拦截Controller
 
 ![image-20240326103937642](image-20240326103937642.png)
 
+### 配置
 
+* 自定义拦截器，实现HandlerInterceptor接口
+* 实现接口中的拦截方法（preHandle-请求执行前、postHandler-请求执行后、afterCompletion-视图渲染后）
+* 创建配置类，实现WebMvcConfiggurer接口，重写addInterceptors方法
+
+
+
+## 过滤器
+
+* 自定义拦截器，实现Filter接口（Spring boot3 开始，jakarta.servlet.Filter）
+* 实现doFilter，实现过滤逻辑，酌情放行
+* 创建注解，实现过滤的范围配置
 
 
 
