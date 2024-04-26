@@ -1,4 +1,22 @@
-# *JAVA**
+# **JAVA**
+
+## JDK&&JRE&&JVM
+
+1. **JDK (Java Development Kit)**：它是面向Java开发者的完整开发工具包，提供了编译Java源代码的工具（如javac）、运行Java程序的工具（如java），以及用于调试、监控和分析Java应用程序的一系列工具。此外，它还包含了Java API，这是一套庞大的标准类库，为开发者提供了大量的编程接口和功能实现。JDK的目标是提供一个全面的、集成的环境，让开发者能够有效地编写Java代码。
+2. **JRE (Java Runtime Environment)**：它是运行Java程序所必须的环境，包括了JVM和Java核心类库，以及支持文件。与JDK不同，JRE没有包含开发工具，因此它主要针对的是Java程序的用户，而不是开发者。如果你只需要运行Java应用程序，那么你的系统中只需安装JRE。
+3. **JVM (Java Virtual Machine)**：它是Java平台的核心，负责运行Java字节码（.class文件）。JVM在执行字节码时，会将其转换成底层操作系统能理解的机器码。由于JVM屏蔽了底层系统的差异，使得Java程序能够实现“一次编译，到处运行”的特性。每个操作系统上都可以运行一个JVM实例，而JVM内部负责将Java程序的执行结果统一呈现出来，不受操作系统差异的影响。
+
+**JDK包含了JRE，而JRE又包含了JVM**。具体来说，JDK提供了完整的开发工具和环境，包括JRE和一系列开发工具；JRE则提供了运行Java程序所需的环境，包括JVM和Java核心类库；JVM则是实际执行Java字节码的虚拟机，负责将Java程序的解释执行委托给宿主操作系统
+
+## J2SE$$J2ME&&J2EE
+
+1. **J2SE (Java 2 Platform, Standard Edition)**：这是Java平台的标准版，适用于桌面环境。它提供了开发和运行普通PC应用所需的所有核心功能，包括所有的Java核心类库和API。J2SE是Java的基础，通常也是Java初学者的入门点。
+2. **J2ME (Java 2 Platform, Micro Edition)**：这是Java平台的微型版，主要针对移动设备和嵌入式设备，如手机、PDA、电视机顶盒和打印机等。J2ME提供了一个灵活且健壮的环境，支持动态下载的连网和离线应用程序，以及内置的网络协议和安全模型。
+3. **J2EE (Java 2 Platform, Enterprise Edition)**：这是Java平台的企业版，它在J2SE的基础上添加了一系列企业级应用编程接口，用于开发基于Web的多层架构应用。J2EE包含了多种技术，如JSP、Servlet、JDBC等，主要用于开发浏览器和服务器结构的B/S应用程序。
+
+- **J2SE** 是Java平台的基础，包含了Java的核心类库和API，是其他Java版本的起点。
+- **J2ME** 是在J2SE的基础上，针对移动设备和嵌入式设备的需求进行了优化和简化。
+- **J2EE** 则是在J2SE的基础上，增加了企业级应用所需的技术和服务，用于构建复杂的、多用户的、分布式的企业应用。
 
 ## **类常量**
 
